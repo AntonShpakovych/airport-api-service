@@ -20,7 +20,8 @@ INSTALLED_APPS = [
 
     "api",
     "airport",
-    "account"
+    "account",
+    "cart"
 ]
 
 MIDDLEWARE = [
