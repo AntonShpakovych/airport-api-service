@@ -18,7 +18,8 @@ INSTALLED_APPS = [
 
     "rest_framework",
 
-    "api"
+    "api",
+    "airport"
 ]
 
 MIDDLEWARE = [
