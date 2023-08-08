@@ -1,8 +1,12 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
 class AirplaneType(models.Model):
     name = models.CharField(max_length=30, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Airplane(models.Model):
@@ -15,10 +19,20 @@ class Airplane(models.Model):
         on_delete=models.CASCADE
     )
 
+    @property
+    def capacity(self) -> int:
+        return self.seats_in_row * self.rows
+
+    def __str__(self) -> str:
+        return self.name
+
 
 class Airport(models.Model):
     name = models.CharField(max_length=30)
     closest_big_city = models.CharField(max_length=15)
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Route(models.Model):
@@ -32,12 +46,40 @@ class Route(models.Model):
         related_name="destinations",
         on_delete=models.CASCADE
     )
-    distance = models.IntegerField
+    distance = models.IntegerField()
+
+    @staticmethod
+    def validate_source_destination(source, destination, error_to_raise):
+        if source == destination:
+            raise error_to_raise(
+                "Destination can't be the same with source"
+            )
+
+    def clean(self):
+        super().clean()
+        Route.validate_source_destination(
+            self.source,
+            self.destination,
+            ValidationError
+        )
+
+    def save(
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None,
+    ):
+        self.full_clean()
+        return super().save(force_insert, force_update, using, update_fields)
 
 
 class Crew(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
+
+    def __str__(self) -> str:
+        return self.first_name + " " + self.last_name
 
 
 class Flight(models.Model):
