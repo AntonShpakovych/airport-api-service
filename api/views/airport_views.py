@@ -1,5 +1,6 @@
 from django.db.models import F, Value, Count
 from django.db.models.functions import Concat
+
 from rest_framework import viewsets
 
 from airport.models import (
@@ -9,6 +10,10 @@ from airport.models import (
     Route,
     Crew,
     Flight
+)
+from api.filters.flight_filters import (
+    FlightFilter,
+    AirportFilter, AirplaneFilter
 )
 
 from api.permissions import IsAdminOrIfAuthenticatedReadOnly
@@ -24,7 +29,8 @@ from api.serializers.airport_serializers import (
     CrewSerializer,
     FlightSerializer,
     FlightListSerializer,
-    FlightDetailSerializer, CrewDetailSerializer
+    FlightDetailSerializer,
+    CrewDetailSerializer
 )
 
 
@@ -38,6 +44,7 @@ class AirplaneViewSet(viewsets.ModelViewSet):
     queryset = Airplane.objects.all()
     serializer_class = AirplaneListSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+    filterset_class = AirplaneFilter
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -56,6 +63,7 @@ class AirportViewSet(viewsets.ModelViewSet):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+    filterset_class = AirportFilter
 
 
 class RouteViewSet(viewsets.ModelViewSet):
@@ -98,6 +106,7 @@ class FlightViewSet(viewsets.ModelViewSet):
     queryset = Flight.objects.all()
     serializer_class = FlightSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
+    filterset_class = FlightFilter
 
     def get_serializer_class(self):
         if self.action == "list":
