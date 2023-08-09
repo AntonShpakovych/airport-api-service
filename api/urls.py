@@ -16,7 +16,9 @@ from api.views.airport_views import (
     AirplaneTypeViewSet,
     AirplaneViewSet,
     AirportViewSet,
-    RouteViewSet
+    RouteViewSet,
+    CrewViewSet,
+    FlightViewSet
 )
 
 
@@ -26,6 +28,8 @@ router.register("airplane_types", AirplaneTypeViewSet)
 router.register("airplanes", AirplaneViewSet)
 router.register("airports", AirportViewSet)
 router.register("routes", RouteViewSet)
+router.register("crews", CrewViewSet)
+router.register("flights", FlightViewSet)
 
 urlpatterns = [
     path(

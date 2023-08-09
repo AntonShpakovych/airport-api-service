@@ -1,22 +1,30 @@
+from django.db.models import F, Value
+from django.db.models.functions import Concat
 from rest_framework import viewsets
 
 from airport.models import (
     AirplaneType,
     Airplane,
     Airport,
-    Route
+    Route,
+    Crew,
+    Flight
 )
 
 from api.permissions import IsAdminOrIfAuthenticatedReadOnly
 from api.serializers.airport_serializers import (
     AirplaneTypeSerializer,
     AirplaneSerializer,
-    AirplaneSerializerList,
-    AirplaneSerializerDetail,
+    AirplaneListSerializer,
+    AirplaneDetailSerializer,
     AirportSerializer,
     RouteSerializer,
-    RouteSerializerList,
-    RouteSerializerDetail
+    RouteListSerializer,
+    RouteDetailSerializer,
+    CrewSerializer,
+    FlightSerializer,
+    FlightListSerializer,
+    FlightDetailSerializer
 )
 
 
@@ -28,14 +36,14 @@ class AirplaneTypeViewSet(viewsets.ModelViewSet):
 
 class AirplaneViewSet(viewsets.ModelViewSet):
     queryset = Airplane.objects.all()
-    serializer_class = AirplaneSerializerList
+    serializer_class = AirplaneListSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_serializer_class(self):
         if self.action == "retrieve":
-            return AirplaneSerializerDetail
+            return AirplaneDetailSerializer
         if self.action == "list":
-            return AirplaneSerializerList
+            return AirplaneListSerializer
         return AirplaneSerializer
 
     def get_queryset(self):
@@ -57,12 +65,48 @@ class RouteViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "retrieve":
-            return RouteSerializerDetail
+            return RouteDetailSerializer
         if self.action == "list":
-            return RouteSerializerList
+            return RouteListSerializer
         return RouteSerializer
 
     def get_queryset(self):
         if self.action in ("retrieve", "list"):
             return Route.objects.select_related("source", "destination")
         return Route.objects.all()
+
+
+class CrewViewSet(viewsets.ModelViewSet):
+    queryset = Crew.objects.all()
+    serializer_class = CrewSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
+
+
+class FlightViewSet(viewsets.ModelViewSet):
+    queryset = Flight.objects.all()
+    serializer_class = FlightSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return FlightListSerializer
+        if self.action == "retrieve":
+            return FlightDetailSerializer
+        return FlightSerializer
+
+    def get_queryset(self):
+        if self.action in ("retrieve", "list"):
+            return Flight.objects.prefetch_related(
+                "crews",
+            ).select_related(
+                "airplane",
+                "route__destination",
+                "route__source"
+            ).annotate(
+                route_full_name=Concat(
+                    F("route__source__name"),
+                    Value("->"),
+                    F("route__destination__name")
+                )
+            )
+        return Flight.objects.all()
