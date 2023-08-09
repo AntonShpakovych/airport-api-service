@@ -19,10 +19,16 @@ class OrderViewSet(
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user).prefetch_related(
+        queryset = self.queryset.filter(user=self.request.user).prefetch_related(
             "tickets__flight__airplane",
             "tickets__flight__crews"
         )
+
+        created_at = self.request.query_params.get("created_at")
+
+        if created_at:
+            queryset = queryset.filter(created_at=created_at)
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
