@@ -18,18 +18,24 @@ from api.views.airport_views import (
     AirportViewSet,
     RouteViewSet,
     CrewViewSet,
-    FlightViewSet
+    FlightViewSet,
+)
+from api.views.cart_views import (
+    OrderViewSet
 )
 
 
-router = routers.DefaultRouter()
+router_airport = routers.DefaultRouter()
+router_cart = routers.DefaultRouter()
 
-router.register("airplane_types", AirplaneTypeViewSet)
-router.register("airplanes", AirplaneViewSet)
-router.register("airports", AirportViewSet)
-router.register("routes", RouteViewSet)
-router.register("crews", CrewViewSet)
-router.register("flights", FlightViewSet)
+router_airport.register("airplane_types", AirplaneTypeViewSet)
+router_airport.register("airplanes", AirplaneViewSet)
+router_airport.register("airports", AirportViewSet)
+router_airport.register("routes", RouteViewSet)
+router_airport.register("crews", CrewViewSet)
+router_airport.register("flights", FlightViewSet)
+
+router_cart.register("orders", OrderViewSet)
 
 urlpatterns = [
     path(
@@ -57,7 +63,8 @@ urlpatterns = [
         ManageUserView.as_view(),
         name="profile"
     ),
-    path("airport/", include(router.urls))
+    path("airport/", include(router_airport.urls)),
+    path("cart/", include(router_cart.urls))
 
 ]
 
