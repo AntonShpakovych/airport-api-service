@@ -42,7 +42,8 @@ class Ticket(models.Model):
                 raise error_to_raise(
                     {
                         ticket_attr_name: f"{ticket_attr_name} "
-                                          f"number must be in available range: "
+                                          f"number must be in "
+                                          f"available range: "
                                           f"(1, {airplane_attr_name}): "
                                           f"(1, {count_attrs})"
                     }
@@ -69,4 +70,3 @@ class Ticket(models.Model):
     class Meta:
         unique_together = ["flight", "row", "seat"]
         ordering = ["row", "seat"]
-

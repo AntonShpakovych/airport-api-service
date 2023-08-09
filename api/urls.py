@@ -63,9 +63,14 @@ urlpatterns = [
         ManageUserView.as_view(),
         name="profile"
     ),
-    path("airport/", include(router_airport.urls)),
-    path("cart/", include(router_cart.urls))
-
+    path(
+        "airport/",
+        include(router_airport.urls)
+    ),
+    path(
+        "cart/",
+        include(router_cart.urls)
+    )
 ]
 
 app_name = "api"
