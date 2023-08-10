@@ -5,6 +5,9 @@ from django.db import models
 class AirplaneType(models.Model):
     name = models.CharField(max_length=30, unique=True)
 
+    class Meta:
+        ordering = ["name"]
+
     def __str__(self) -> str:
         return self.name
 
@@ -19,6 +22,9 @@ class Airplane(models.Model):
         on_delete=models.CASCADE
     )
 
+    class Meta:
+        ordering = ["name"]
+
     @property
     def capacity(self) -> int:
         return self.seats_in_row * self.rows
@@ -30,6 +36,9 @@ class Airplane(models.Model):
 class Airport(models.Model):
     name = models.CharField(max_length=30)
     closest_big_city = models.CharField(max_length=15)
+
+    class Meta:
+        ordering = ["name"]
 
     def __str__(self) -> str:
         return self.name
@@ -47,6 +56,9 @@ class Route(models.Model):
         on_delete=models.CASCADE
     )
     distance = models.IntegerField()
+
+    class Meta:
+        ordering = ["source"]
 
     @staticmethod
     def validate_source_destination(source, destination, error_to_raise):
@@ -78,6 +90,9 @@ class Crew(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
 
+    class Meta:
+        ordering = ["first_name"]
+
     def __str__(self) -> str:
         return self.first_name + " " + self.last_name
 
@@ -99,3 +114,6 @@ class Flight(models.Model):
     )
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
+
+    class Meta:
+        ordering = ["departure_time"]

@@ -16,6 +16,9 @@ class Order(models.Model):
         on_delete=models.CASCADE
     )
 
+    class Meta:
+        ordering = ["user"]
+
 
 class Ticket(models.Model):
     row = models.IntegerField()
