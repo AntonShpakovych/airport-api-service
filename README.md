@@ -41,14 +41,14 @@ Password: admin
 
 - create user api/v1/account/register
 - get access token api/v1/account/token
-- refresh token api/v1/account/refresh
-- verify token api/v1/account/verify
+- refresh token api/v1/account/token/refresh
+- verify token api/v1/account/token/verify
 
 ## Available urls
 - api/v1/account/register/
 - api/v1/account/token/
-- api/v1/account/refresh/
-- api/v1/account/verify/
+- api/v1/account/token/refresh/
+- api/v1/account/token/verify/
 - api/v1/account/profile/
 #
 - api/v1/airport/airplane_types/
