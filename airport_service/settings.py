@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import datetime
 
@@ -66,6 +67,16 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("POSTGRES_NAME"),
+#         "USER": os.getenv("POSTGRES_USER"),
+#         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+#         "HOST": os.getenv("POSTGRES_HOST"),
+#         "PORT": os.getenv("POSTGRES_PORT"),
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -105,4 +116,14 @@ REST_FRAMEWORK = {
     "MAX_PAGE_SIZE": 100,
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {"user": "50/day"},
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
 }
