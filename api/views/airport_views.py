@@ -90,7 +90,7 @@ class AirportViewSet(viewsets.ModelViewSet):
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                "airplane_type",
+                "closest_big_city",
                 type=str,
                 description="Filter by closest_big_city, lookup=iexact "
                             "(ex.?closest_big_city=Florida)",
