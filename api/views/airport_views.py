@@ -1,5 +1,6 @@
 from django.db.models import F, Value, Count
 from django.db.models.functions import Concat
+from drf_spectacular.utils import extend_schema
 
 from rest_framework import viewsets
 
@@ -11,6 +12,7 @@ from airport.models import (
     Crew,
     Flight
 )
+
 from api.filters.flight_filters import (
     FlightFilter,
     AirportFilter, AirplaneFilter
@@ -30,16 +32,18 @@ from api.serializers.airport_serializers import (
     FlightSerializer,
     FlightListSerializer,
     FlightDetailSerializer,
-    CrewDetailSerializer
+    CrewDetailSerializer,
 )
 
 
+@extend_schema(tags=["AirplaneTypes"])
 class AirplaneTypeViewSet(viewsets.ModelViewSet):
     queryset = AirplaneType.objects.all()
     serializer_class = AirplaneTypeSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
+@extend_schema(tags=["Airplanes"])
 class AirplaneViewSet(viewsets.ModelViewSet):
     queryset = Airplane.objects.all()
     serializer_class = AirplaneListSerializer
@@ -59,6 +63,7 @@ class AirplaneViewSet(viewsets.ModelViewSet):
         return Airplane.objects.all()
 
 
+@extend_schema(tags=["Airports"])
 class AirportViewSet(viewsets.ModelViewSet):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
@@ -66,6 +71,7 @@ class AirportViewSet(viewsets.ModelViewSet):
     filterset_class = AirportFilter
 
 
+@extend_schema(tags=["Routes"])
 class RouteViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
@@ -84,6 +90,7 @@ class RouteViewSet(viewsets.ModelViewSet):
         return Route.objects.all()
 
 
+@extend_schema(tags=["Crews"])
 class CrewViewSet(viewsets.ModelViewSet):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
@@ -102,6 +109,7 @@ class CrewViewSet(viewsets.ModelViewSet):
         return self.queryset
 
 
+@extend_schema(tags=["Flights"])
 class FlightViewSet(viewsets.ModelViewSet):
     queryset = Flight.objects.all()
     serializer_class = FlightSerializer

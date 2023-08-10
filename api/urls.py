@@ -10,7 +10,7 @@ from rest_framework_simplejwt.views import (
 
 from api.views.account_views import (
     CreateUserView,
-    ManageUserView
+    ManageUserView,
 )
 from api.views.airport_views import (
     AirplaneTypeViewSet,

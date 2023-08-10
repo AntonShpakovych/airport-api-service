@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, viewsets
 
 from cart.models import Order
@@ -9,6 +10,7 @@ from api.serializers.cart_serializers import (
 )
 
 
+@extend_schema(tags=["Carts"])
 class OrderViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
