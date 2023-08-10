@@ -1,4 +1,6 @@
-from drf_spectacular.utils import extend_schema
+from datetime import datetime
+
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import mixins, viewsets
 
 from cart.models import Order
@@ -21,7 +23,9 @@ class OrderViewSet(
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
 
     def get_queryset(self):
-        queryset = self.queryset.filter(user=self.request.user).prefetch_related(
+        queryset = self.queryset.filter(
+            user=self.request.user
+        ).prefetch_related(
             "tickets__flight__airplane",
             "tickets__flight__crews"
         )
@@ -39,3 +43,17 @@ class OrderViewSet(
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "created_at",
+                type=datetime,
+                description="Filter by created_at "
+                            "(ex.?created_at=2023-08-09T13:34:44.670309Z)",
+                required=False
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)

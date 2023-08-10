@@ -1,6 +1,8 @@
+from datetime import datetime
+
 from django.db.models import F, Value, Count
 from django.db.models.functions import Concat
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from rest_framework import viewsets
 
@@ -13,9 +15,10 @@ from airport.models import (
     Flight
 )
 
-from api.filters.flight_filters import (
+from api.filters.airport_filters import (
     FlightFilter,
-    AirportFilter, AirplaneFilter
+    AirportFilter,
+    AirplaneFilter
 )
 
 from api.permissions import IsAdminOrIfAuthenticatedReadOnly
@@ -62,6 +65,20 @@ class AirplaneViewSet(viewsets.ModelViewSet):
             return Airplane.objects.select_related("airplane_type")
         return Airplane.objects.all()
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "airplane_type",
+                type=str,
+                description="Filter by airplane_type, lookup=icontains "
+                            "(ex.?airplane_type=Airplane1) ",
+                required=False
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 @extend_schema(tags=["Airports"])
 class AirportViewSet(viewsets.ModelViewSet):
@@ -69,6 +86,20 @@ class AirportViewSet(viewsets.ModelViewSet):
     serializer_class = AirportSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
     filterset_class = AirportFilter
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "airplane_type",
+                type=str,
+                description="Filter by closest_big_city, lookup=iexact "
+                            "(ex.?closest_big_city=Florida)",
+                required=False
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 @extend_schema(tags=["Routes"])
@@ -143,3 +174,30 @@ class FlightViewSet(viewsets.ModelViewSet):
                 )
             )
         return Flight.objects.all()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "route_destination",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by route->source "
+                            "(ex.?route_destination=1,2)",
+                required=False
+            ),
+            OpenApiParameter(
+                "departure_time",
+                type=datetime,
+                description="Filter by departure_time "
+                            "(ex.?departure_time=2023-08-09T11:55:00Z)",
+                required=False
+            ),
+            OpenApiParameter(
+                "airplane",
+                type=int,
+                description="Filter by airplane (ex.?airplane=1)",
+                required=False
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)

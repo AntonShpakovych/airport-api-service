@@ -1,11 +1,15 @@
 import django_filters
-from django_filters import BaseRangeFilter, DateTimeFilter, CharFilter
+from django_filters import (
+    BaseRangeFilter,
+    DateTimeFilter,
+    CharFilter
+)
 
 from airport.models import Flight
 
 
 class FlightFilter(django_filters.FilterSet):
-    route = BaseRangeFilter(method="route_filter")
+    route_destination = BaseRangeFilter(method="route_filter")
     departure_time = DateTimeFilter(
         field_name="departure_time",
         lookup_expr="exact"
