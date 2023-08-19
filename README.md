@@ -14,6 +14,13 @@ API service for tracking flights from airports written on DRF
   - Order
   - Ticket
 
+## Features
+- JWT Authenticated
+- Documentation is located in /api/v1/doc/swagger/
+- Managing orders and tickets
+- CRUD for all entity except User
+- filtering with django_filters and query_params
+
 ## Installing using GitHub
 Install PostgreSQL and create db
 
@@ -59,11 +66,5 @@ Password: admin
 - api/v1/airport/flights/
 #
 - api/v1/cart/orders/
-
-
-## Features
-- JWT Authenticated
-- Documentation is located in /api/v1/doc/swagger/
-- Managing orders and tickets
-- CRUD for all entity except User
-- filtering with django_filters and query_params
+## Documantation
+- api/v1/doc/
