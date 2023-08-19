@@ -1,6 +1,8 @@
 # Airport Api Service
-
 API service for tracking flights from airports written on DRF
+# UML
+![](uml_airport_api.png)
+
   # Airport
   - AirplaneType
   - Airplane
